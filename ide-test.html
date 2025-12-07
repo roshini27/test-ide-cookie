@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>IDE Debug Test (Vercel)</h2>
+
+<script>
+const GOOGLE_NID = "1686285891";
+
+async function sha1(message) {
+  const data = new TextEncoder().encode(message);
+  const hash = await crypto.subtle.digest("SHA-1", data);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+(async () => {
+  const uid = "user_" + Math.random().toString(36).substring(2);
+  const hashed = await sha1(uid);
+
+  const redirect = encodeURIComponent(location.href);
+
+  const pixelUrl =
+    "https://cm.g.doubleclick.net/pixel?" +
+    "google_nid=" + GOOGLE_NID +
+    "&google_hm=" + hashed +
+    "&redirect=" + redirect +
+    "&tag_debug=1";
+
+  console.log("FORCING IDE:", pixelUrl);
+
+  const iframe = document.createElement("iframe");
+  iframe.src = pixelUrl;
+  iframe.style.display = "none";
+
+  document.body.appendChild(iframe);
+})();
+</script>
+
+</body>
+</html>
