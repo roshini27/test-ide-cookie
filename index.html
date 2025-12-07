@@ -1,52 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DoubleClick Cookie Sync – Visible 302 Version</title>
+  <title>DoubleClick Quick Sync Test</title>
 </head>
 <body>
-<h2>DoubleClick Cookie Sync – Visible 302 Version</h2>
-<p>Open DevTools → Network + Application → Cookies (.doubleclick.net)</p>
+
+<h2>DoubleClick Quick Cookie Sync Test</h2>
+<p>Open DevTools → Network + Application → Cookies</p>
 
 <script>
-const GOOGLE_NETWORK_ID = "1686285891"; // no hyphens
+(async function () {
+  console.log("🚀 Starting Quick DoubleClick Sync Test");
 
-async function sha1(message) {
-  const data = new TextEncoder().encode(message);
-  const hash = await crypto.subtle.digest("SHA-1", data);
-  return Array.from(new Uint8Array(hash))
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
+  const GOOGLE_NID = "1686285891"; // your real network ID
 
-(async () => {
-  // generate some user ID (just for testing)
-  const uid = "user_" + Math.random().toString(36).substring(2);
+  // Create a random test user
+  const uid = "u_" + Math.random().toString(36).substring(2) + Date.now();
+  console.log("Test UID:", uid);
 
-  // hash it (Google requires SHA1 hex)
+  // SHA1 hash (official Google format)
+  async function sha1(msg) {
+    const buf = new TextEncoder().encode(msg);
+    const hash = await crypto.subtle.digest("SHA-1", buf);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
   const hashed = await sha1(uid);
 
-  // redirect param -> causes a real visible 302
-  const redirect = encodeURIComponent("https://example.com/sync_done");
-
-  // FULL GOOGLE SYNC URL (with tag_debug=1 to expose redirects)
   const pixelUrl =
     "https://cm.g.doubleclick.net/pixel?" +
-    "google_nid=" + GOOGLE_NETWORK_ID +
+    "google_nid=" + GOOGLE_NID +
     "&google_hm=" + hashed +
-    "&redirect=" + redirect +
-    "&tag_debug=1";
+    "&google_cm";
 
-  console.log("Triggering sync:", pixelUrl);
+  console.log("✅ Firing Pixel:", pixelUrl);
 
-  // IMPORTANT: using iframe instead of <img> will SHOW THE 302 VISIBLY
-  const iframe = document.createElement("iframe");
-  iframe.src = pixelUrl;
-  iframe.width = 0;
-  iframe.height = 0;
-  iframe.style.border = "none";
-  iframe.style.display = "none";
+  const img = new Image();
+  img.onload = () => console.log("✅ Pixel loaded (request sent)");
+  img.onerror = () => console.error("❌ Pixel blocked");
 
-  document.body.appendChild(iframe);
+  img.src = pixelUrl;
 })();
 </script>
 
