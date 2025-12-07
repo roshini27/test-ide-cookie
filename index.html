@@ -1,39 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Meta Pixel Quick Test</title>
-</head>
-<body>
-
-<h2>✅ Meta Pixel Quick Test</h2>
-<p>Open DevTools → Network & Application → Cookies</p>
-
-<!-- ✅ META (FACEBOOK) PIXEL -->
 <script>
-!function(f,b,e,v,n,t,s){
-  if(f.fbq)return;
-  n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;
-  n.push=n.loaded=!0;
-  n.version='2.0';
-  n.queue=[];
-  t=b.createElement(e);t.async=!0;
-  t.src=v;
-  s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)
-}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+function forceFBPCookie() {
+  const existing = document.cookie.match(/_fbp=([^;]+)/);
+  if (existing) {
+    console.log("✅ _fbp already exists:", existing[1]);
+    return;
+  }
 
-fbq('init', '101937259');   // ✅ YOUR META PIXEL ID
-fbq('track', 'PageView');
+  const fbp = "fb.1." + Date.now() + "." + Math.floor(Math.random() * 1e9);
+  document.cookie =
+    "_fbp=" + fbp + "; Path=/; SameSite=None; Secure;";
 
-console.log("✅ META PIXEL INITIALIZED WITH ID: 101937259");
+  console.log("✅ _fbp FORCED for demo:", fbp);
+}
+
+function OptanonWrapper() {
+  console.log("✅ Consent granted → forcing _fbp cookie");
+  forceFBPCookie();
+}
 </script>
-
-<noscript>
-  <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=101937259&ev=PageView&noscript=1"/>
-</noscript>
-
-</body>
-</html>
