@@ -191,9 +191,9 @@
             const userId = generateUserId();
             log(`Generated User ID: ${userId}`, 'success');
 
-            // DoubleClick Cookie Match pixel
-            // This creates the IDE (ID Exchange) cookie
-            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${DC_NID}&google_cm&gdpr=0&gdpr_consent=&google_sc=${userId}`;
+            // DoubleClick Cookie Match pixel - Corrected format
+            // The google_cm parameter must have a value for proper redirect
+            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${DC_NID}&google_hm=${userId}&google_cm=1`;
             
             log('', 'info');
             log('📡 Initiating DoubleClick pixel call...', 'info');
@@ -216,12 +216,12 @@
                 log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
                 log('1. In Network tab, find: cm.g.doubleclick.net/pixel', 'info');
                 log('2. Click on the request', 'info');
-                log('3. Check Headers tab:', 'info');
-                log('   - Status Code: Should be 302', 'info');
-                log('   - Response Headers: Find "Location"', 'info');
+                log('3. Check Status Code: Should be 302 (not 200!)', 'info');
+                log('4. Check Response Headers:', 'info');
+                log('   - Find "Location" header', 'info');
                 log('   - Location URL should contain: ide=XXXXXXXX', 'info');
-                log('4. Check Cookies tab in the request', 'info');
-                log('5. Look for "IDE" cookie being set', 'info');
+                log('5. Check Cookies tab in the request', 'info');
+                log('6. Look for "IDE" cookie being set', 'info');
                 log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
                 
                 // Try to extract IDE from any redirect
@@ -250,7 +250,7 @@
             const userId = generateUserId();
             log(`Generated User ID: ${userId}`, 'success');
 
-            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${DC_NID}&google_cm&gdpr=0&gdpr_consent=&google_sc=${userId}`;
+            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${DC_NID}&google_hm=${userId}&google_cm=1`;
             
             log('', 'info');
             log('📡 Using Image tag for pixel call...', 'info');
