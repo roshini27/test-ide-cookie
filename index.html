@@ -1,64 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Meta Cookie Demo – Visible _fbp</title>
+  <title>Facebook + Analytics Test</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- ========================= -->
-  <!-- ✅ ONETRUST CMP -->
-  <!-- ========================= -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      text-align: center;
+      margin-top: 60px;
+    }
+  </style>
+
+  <!-- ✅ CMP -->
   <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
     type="text/javascript"
     charset="UTF-8"
     data-domain-script="0195138c-cdc8-738c-907d-131dad8db9ba-test">
   </script>
 
-  <!-- ========================= -->
-  <!-- ✅ FORCE _fbp AFTER CONSENT (DEMO PURPOSE) -->
-  <!-- ========================= -->
   <script>
-    function forceFBPCookie() {
-      const existing = document.cookie.match(/_fbp=([^;]+)/);
-      if (existing) {
-        console.log("✅ _fbp already exists:", existing[1]);
-        return;
-      }
-
-      const fbp = "fb.1." + Date.now() + "." + Math.floor(Math.random() * 1e9);
-
-      document.cookie =
-        "_fbp=" + fbp + "; Path=/; SameSite=None; Secure;";
-
-      console.log("✅ _fbp FORCED for demo:", fbp);
-
-      const el = document.getElementById("fbp-status");
-      if (el) el.innerText = fbp;
-    }
-
     function OptanonWrapper() {
-      console.log("✅ Consent granted → forcing _fbp");
-      forceFBPCookie();
+      console.log("✅ OneTrust consent ready");
     }
   </script>
 
-  <!-- ========================= -->
-  <!-- ✅ META PIXEL -->
-  <!-- ========================= -->
+  <!-- ✅ META PIXEL (GUARANTEED LOAD) -->
   <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
+  (function() {
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://connect.facebook.net/en_US/fbevents.js";
 
-    fbq('init', '101937259');  // ✅ YOUR META PIXEL ID
-    fbq('track', 'PageView');
+    s.onload = function() {
+      console.log("✅ META SCRIPT LOADED");
 
-    console.log("✅ META PIXEL INITIALIZED WITH ID: 101937259");
+      if (typeof fbq !== "function") {
+        console.error("❌ fbq STILL undefined after load");
+        return;
+      }
+
+      fbq('init', '101937259');   // ✅ YOUR PIXEL ID
+      fbq('track', 'PageView');
+
+      console.log("✅ fbq initialized");
+      console.log("✅ Meta PageView sent");
+    };
+
+    s.onerror = function() {
+      console.error("❌ Failed to load Facebook script");
+    };
+
+    document.head.appendChild(s);
+  })();
   </script>
 
   <noscript>
@@ -66,43 +64,36 @@
       src="https://www.facebook.com/tr?id=101937259&ev=PageView&noscript=1"/>
   </noscript>
 
+  <!-- ✅ ANALYTICS.JS (NO GOOGLE SYNC FLAGS) -->
+  <script 
+    type="text/javascript"
+    src="https://web-analytics-js5-dot-uxlwqzc-cdip-sandbox-test.uc.r.appspot.com/static/analytics.js?facebookCookieSyncFlag=true&automaticTracking=true&dataLayer=dataLayer&backendBaseUrl=https%3A%2F%2Fweb-analytics-dot-uxlwqzc-cdip-sandbox-test.uc.r.appspot.com">
+  </script>
+
 </head>
 
-<body style="font-family: Arial; padding: 40px;">
+<body>
 
-  <h1>✅ Meta Cookie Demo – 2025 Safe</h1>
+  <h1>✅ Facebook + Analytics Test Page</h1>
+  <p>No Google sync on this page</p>
+  <p>Open DevTools → Console + Network</p>
 
-  <p><strong>Meta Pixel ID:</strong> 101937259</p>
+  <button onclick="fireTestEvent()" class="w3-button w3-green w3-large">
+    Send Test Event
+  </button>
 
-  <p><strong>Forced _fbp Cookie Value:</strong></p>
-  <div id="fbp-status" style="padding:10px;background:#eee;border-radius:6px;margin-top:8px;">
-    Waiting for consent...
-  </div>
+  <script>
+    function fireTestEvent() {
+      if (typeof fbq === "function") {
+        fbq('track', 'Purchase', { value: 199, currency: 'INR' });
+        console.log(" Meta Purchase Event Fired");
+      } else {
+        console.log(" fbq not available");
+      }
 
-  <hr>
-
-  <h3>✅ DEMO VERIFICATION STEPS</h3>
-  <ol>
-    <li>Accept OneTrust cookies</li>
-    <li>Open DevTools → <b>Application</b></li>
-    <li>Go to <b>Cookies → Your Domain</b></li>
-    <li>You WILL see: <b>_fbp</b></li>
-    <li>Open DevTools → <b>Network</b></li>
-    <li>Filter: <code>tr</code></li>
-    <li>You WILL see: <code>/tr?id=101937259</code></li>
-    <li>Open Meta Events Manager → <b>Test Events</b></li>
-    <li>You WILL see: <b>PageView</b></li>
-  </ol>
-
-  <hr>
-
-  <h3>✅ What This Proves to Stakeholders</h3>
-  <ul>
-    <li>✅ Cookie is visible in browser</li>
-    <li>✅ Meta receives PageView</li>
-    <li>✅ Consent is respected</li>
-    <li>✅ Works in 2025 browsers</li>
-  </ul>
+      console.log(" Analytics.js event should also fire now");
+    }
+  </script>
 
 </body>
 </html>
