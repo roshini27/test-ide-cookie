@@ -1,333 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoubleClick Cookie Sync Demo</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .nid-display {
-            background: #e8f0fe;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            font-family: monospace;
-            font-size: 14px;
-        }
-        button {
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        button:hover {
-            background: #357ae8;
-        }
-        button.secondary {
-            background: #5f6368;
-        }
-        button.secondary:hover {
-            background: #4a4d51;
-        }
-        .log-container {
-            margin-top: 30px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 20px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .log-entry {
-            padding: 8px;
-            margin: 5px 0;
-            background: white;
-            border-left: 4px solid #4285f4;
-            font-family: monospace;
-            font-size: 13px;
-        }
-        .log-entry.success {
-            border-left-color: #34a853;
-        }
-        .log-entry.info {
-            border-left-color: #fbbc04;
-        }
-        .log-entry.error {
-            border-left-color: #ea4335;
-        }
-        .iframe-container {
-            display: none;
-        }
-        .instructions {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        .instructions h3 {
-            margin-top: 0;
-            color: #856404;
-        }
-        .network-info {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 20px 0;
-        }
-        .network-info h4 {
-            margin-top: 0;
-            color: #0c5460;
-        }
-        .network-info code {
-            background: #fff;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 12px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Google DoubleClick Cookie Sync Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Basic security headers -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="referrer" content="no-referrer-when-downgrade">
 </head>
+
 <body>
-    <div class="container">
-        <h1>DoubleClick Cookie Sync Demo</h1>
-        <p class="subtitle">Google DoubleClick IDE Cookie Implementation</p>
-        
-        <div class="nid-display">
-            <strong>DoubleClick Network ID (NID):</strong> 1686285891
-        </div>
 
-        <div class="instructions">
-            <h3>📋 How to Monitor Cookie Sync:</h3>
-            <ol>
-                <li><strong>Open Developer Tools</strong> (Press F12 or Right-click → Inspect)</li>
-                <li>Go to the <strong>Network</strong> tab</li>
-                <li>Clear any existing requests (trash icon)</li>
-                <li>Click <strong>"Sync DoubleClick Cookie"</strong> button below</li>
-                <li>Watch for the request to <code>cm.g.doubleclick.net</code></li>
-            </ol>
-        </div>
+  <h1>Google DoubleClick Cookie Sync Test Page</h1>
+  <p>
+    This page fires the official Google DoubleClick cookie sync pixel.
+    If third-party cookies and ad consent are allowed, the
+    <strong>IDE</strong> cookie will be created under the
+    <strong>.doubleclick.net</strong> domain.
+  </p>
 
-        <button onclick="syncDoubleClick()">Sync DoubleClick Cookie</button>
-        <button onclick="syncWithImage()">Sync via Image (Alternative)</button>
-        <button onclick="checkCookies()" class="secondary">Check Cookies</button>
-        <button onclick="clearLog()" class="secondary">Clear Log</button>
+  <!-- ✅ GOOGLE DOUBLECLICK COOKIE SYNC PIXEL (NO JAVASCRIPT) -->
+  <img
+    src="https://cm.g.doubleclick.net/pixel?google_nid=1686285891&google_cm=1"
+    width="1"
+    height="1"
+    style="display:none;"
+    alt=""
+  >
 
-        <div class="network-info">
-            <h4>🔍 What to Look For in Network Tab:</h4>
-            <ul>
-                <li><strong>Request URL:</strong> <code>cm.g.doubleclick.net/pixel?google_nid=1686285891...</code></li>
-                <li><strong>Status Code:</strong> <code>302 Found</code> (redirect)</li>
-                <li><strong>Response Headers:</strong> Look for <code>Location</code> header</li>
-                <li><strong>IDE Parameter:</strong> In the Location URL, find <code>ide=XXXXXXXXX</code></li>
-                <li><strong>Set-Cookie:</strong> May contain <code>IDE</code> cookie being set</li>
-            </ul>
-        </div>
+  <hr>
 
-        <div class="log-container">
-            <h3>Activity Log:</h3>
-            <div id="logOutput"></div>
-        </div>
+  <h3>✅ How to Verify</h3>
+  <ol>
+    <li>Open this page in <strong>Google Chrome</strong>.</li>
+    <li>Make sure <strong>third-party cookies are NOT blocked</strong>.</li>
+    <li>Open DevTools → <strong>Application → Cookies</strong>.</li>
+    <li>Select <code>https://cm.g.doubleclick.net</code></li>
+    <li>Look for cookie name: <strong>IDE</strong></li>
+  </ol>
 
-        <!-- Hidden iframe for cookie sync -->
-        <div class="iframe-container">
-            <iframe id="dcFrame" style="display:none;"></iframe>
-            <img id="dcImage" style="display:none;" />
-        </div>
-    </div>
+  <h3>❗ If You Don’t See the IDE Cookie</h3>
+  <ul>
+    <li>Third-party cookies are blocked</li>
+    <li>You are using Safari / Brave / Firefox</li>
+    <li>You are in Incognito Mode</li>
+    <li>Ad/Marketing consent is not given</li>
+  </ul>
 
-    <script>
-        const DC_NID = '1686285891';
-
-        function log(message, type = 'info') {
-            const logOutput = document.getElementById('logOutput');
-            const entry = document.createElement('div');
-            entry.className = `log-entry ${type}`;
-            const timestamp = new Date().toLocaleTimeString();
-            entry.textContent = `[${timestamp}] ${message}`;
-            logOutput.appendChild(entry);
-            logOutput.scrollTop = logOutput.scrollHeight;
-        }
-
-        function clearLog() {
-            document.getElementById('logOutput').innerHTML = '';
-            log('Log cleared', 'info');
-        }
-
-        function generateUserId() {
-            return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-        }
-
-        function syncDoubleClick() {
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-            log('🚀 Starting DoubleClick Cookie Sync...', 'info');
-            log(`Using NID: ${DC_NID}`, 'success');
-            
-            const userId = generateUserId();
-            log(`Generated User ID: ${userId}`, 'success');
-
-            // DoubleClick Cookie Match pixel - Corrected format
-            // The google_cm parameter must have a value for proper redirect
-            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${DC_NID}&google_hm=${userId}&google_cm=1`;
-            
-            log('', 'info');
-            log('📡 Initiating DoubleClick pixel call...', 'info');
-            log(`Full URL: ${dcSyncUrl}`, 'info');
-            log('', 'info');
-            log('⏳ Loading pixel... Check Network tab NOW!', 'info');
-            
-            const dcFrame = document.getElementById('dcFrame');
-            const startTime = Date.now();
-            
-            dcFrame.onload = function() {
-                const loadTime = Date.now() - startTime;
-                log('', 'info');
-                log(`✅ DoubleClick pixel loaded (${loadTime}ms)`, 'success');
-                log('', 'info');
-                log('🎯 IDE Cookie Sync Complete!', 'success');
-                log('', 'info');
-                log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-                log('📊 VERIFICATION STEPS:', 'info');
-                log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-                log('1. In Network tab, find: cm.g.doubleclick.net/pixel', 'info');
-                log('2. Click on the request', 'info');
-                log('3. Check Status Code: Should be 302 (not 200!)', 'info');
-                log('4. Check Response Headers:', 'info');
-                log('   - Find "Location" header', 'info');
-                log('   - Location URL should contain: ide=XXXXXXXX', 'info');
-                log('5. Check Cookies tab in the request', 'info');
-                log('6. Look for "IDE" cookie being set', 'info');
-                log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-                
-                // Try to extract IDE from any redirect
-                setTimeout(() => {
-                    log('', 'info');
-                    log('💡 TIP: The IDE cookie is a third-party cookie', 'info');
-                    log('   It may not be visible in document.cookie', 'info');
-                    log('   But you can see it in Network tab!', 'info');
-                }, 500);
-            };
-
-            dcFrame.onerror = function() {
-                log('⚠️ Frame error (this is normal due to CORS)', 'info');
-                log('✅ The request was still sent - check Network tab!', 'success');
-            };
-
-            // Set the iframe source to trigger the request
-            dcFrame.src = dcSyncUrl;
-        }
-
-        function syncWithImage() {
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-            log('🚀 Starting DoubleClick Sync via Image...', 'info');
-            log(`Using NID: ${DC_NID}`, 'success');
-            
-            const userId = generateUserId();
-            log(`Generated User ID: ${userId}`, 'success');
-
-            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${DC_NID}&google_hm=${userId}&google_cm=1`;
-            
-            log('', 'info');
-            log('📡 Using Image tag for pixel call...', 'info');
-            log(`URL: ${dcSyncUrl}`, 'info');
-            log('', 'info');
-            log('⏳ Loading... Check Network tab!', 'info');
-            
-            const img = document.getElementById('dcImage');
-            const startTime = Date.now();
-            
-            img.onload = function() {
-                const loadTime = Date.now() - startTime;
-                log('', 'info');
-                log(`✅ Image loaded (${loadTime}ms)`, 'success');
-                log('🎯 Check Network tab for the redirect!', 'success');
-            };
-            
-            img.onerror = function() {
-                log('✅ Request completed (image error is normal)', 'success');
-                log('📊 Check Network tab for 302 redirect!', 'success');
-            };
-            
-            img.src = dcSyncUrl + '&_=' + Date.now(); // Cache buster
-        }
-
-        function checkCookies() {
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-            log('🍪 Checking Cookies...', 'info');
-            
-            const cookies = document.cookie;
-            
-            if (cookies) {
-                const cookieArray = cookies.split('; ');
-                log(`Found ${cookieArray.length} accessible cookie(s):`, 'success');
-                cookieArray.forEach(cookie => {
-                    log(`  - ${cookie}`, 'info');
-                });
-                
-                // Check for IDE cookie
-                if (cookies.includes('IDE') || cookies.includes('ide')) {
-                    log('✅ IDE cookie found in accessible cookies!', 'success');
-                } else {
-                    log('', 'info');
-                    log('ℹ️ IDE cookie not in document.cookie', 'info');
-                    log('   This is NORMAL - IDE is a third-party cookie', 'info');
-                }
-            } else {
-                log('No cookies accessible via document.cookie', 'info');
-            }
-            
-            log('', 'info');
-            log('🔍 IMPORTANT: How to verify IDE creation:', 'info');
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-            log('1. Go to Network tab', 'info');
-            log('2. Find: cm.g.doubleclick.net/pixel', 'info');
-            log('3. Click on it', 'info');
-            log('4. Look at Response Headers:', 'info');
-            log('   - Location header should have ide=XXXXX', 'info');
-            log('', 'info');
-            log('⚠️ Browser Third-Party Cookie Settings:', 'info');
-            log('   Chrome: Settings → Privacy → Cookies', 'info');
-            log('   - Must allow third-party cookies to see IDE', 'info');
-            log('   - Or check "Allow all cookies"', 'info');
-            log('', 'info');
-            log('💡 Even if cookie is blocked, the IDE value', 'info');
-            log('   is still created and visible in the', 'info');
-            log('   Location header of the 302 response!', 'info');
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
-        }
-
-        // Initial log
-        log('✅ DoubleClick Cookie Sync Demo Ready!', 'success');
-        log(`Using Network ID: ${DC_NID}`, 'info');
-        log('Click "Sync DoubleClick Cookie" to begin', 'info');
-        log('', 'info');
-        log('⚠️ IMPORTANT:', 'info');
-        log('   Make sure Network tab is open BEFORE clicking sync!', 'info');
-    </script>
 </body>
 </html>
