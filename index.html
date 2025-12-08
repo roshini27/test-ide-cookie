@@ -1,99 +1,272 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Facebook + Analytics Test</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-
-  <style>
-    body {
-      font-family: "Roboto", sans-serif;
-      text-align: center;
-      margin-top: 60px;
-    }
-  </style>
-
-  <!-- ✅ CMP -->
-  <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
-    type="text/javascript"
-    charset="UTF-8"
-    data-domain-script="0195138c-cdc8-738c-907d-131dad8db9ba-test">
-  </script>
-
-  <script>
-    function OptanonWrapper() {
-      console.log("✅ OneTrust consent ready");
-    }
-  </script>
-
-  <!-- ✅ META PIXEL (GUARANTEED LOAD) -->
-  <script>
-  (function() {
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = "https://connect.facebook.net/en_US/fbevents.js";
-
-    s.onload = function() {
-      console.log("✅ META SCRIPT LOADED");
-
-      if (typeof fbq !== "function") {
-        console.error("❌ fbq STILL undefined after load");
-        return;
-      }
-
-      fbq('init', '101937259');   // ✅ YOUR PIXEL ID
-      fbq('track', 'PageView');
-
-      console.log("✅ fbq initialized");
-      console.log("✅ Meta PageView sent");
-    };
-
-    s.onerror = function() {
-      console.error("❌ Failed to load Facebook script");
-    };
-
-    document.head.appendChild(s);
-  })();
-  </script>
-
-  <noscript>
-    <img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=101937259&ev=PageView&noscript=1"/>
-  </noscript>
-
-  <!-- ✅ ANALYTICS.JS (NO GOOGLE SYNC FLAGS) -->
-  <script 
-    type="text/javascript"
-    src="https://web-analytics-js5-dot-uxlwqzc-cdip-sandbox-test.uc.r.appspot.com/static/analytics.js?facebookCookieSyncFlag=true&automaticTracking=true&dataLayer=dataLayer&backendBaseUrl=https%3A%2F%2Fweb-analytics-dot-uxlwqzc-cdip-sandbox-test.uc.r.appspot.com">
-  </script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Sync Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #357ae8;
+        }
+        .log-container {
+            margin-top: 30px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-left: 4px solid #4285f4;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .log-entry.success {
+            border-left-color: #34a853;
+        }
+        .log-entry.info {
+            border-left-color: #fbbc04;
+        }
+        .iframe-container {
+            display: none;
+        }
+        .cookie-display {
+            background: #e8f0fe;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>Cookie Sync Demo</h1>
+        <p class="subtitle">DoubleClick & Meta Cookie Synchronization</p>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Enter your DoubleClick NID and Meta Pixel ID below</li>
+                <li>Open your browser's <strong>Developer Tools</strong> (F12)</li>
+                <li>Go to the <strong>Network</strong> tab</li>
+                <li>Click "Initiate Cookie Sync" button</li>
+                <li>Look for requests to <code>doubleclick.net</code> and <code>facebook.com</code></li>
+                <li>Check the <strong>Response Headers</strong> for 302 redirects and IDE parameter</li>
+            </ol>
+        </div>
 
-  <h1>✅ Facebook + Analytics Test Page</h1>
-  <p>No Google sync on this page</p>
-  <p>Open DevTools → Console + Network</p>
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">DoubleClick NID:</label>
+                <input type="text" id="dcNid" placeholder="Enter your DoubleClick Network ID" 
+                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Meta Pixel ID:</label>
+                <input type="text" id="metaPixelId" placeholder="Enter your Meta Pixel ID" 
+                       style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+        </div>
 
-  <button onclick="fireTestEvent()" class="w3-button w3-green w3-large">
-    Send Test Event
-  </button>
+        <button onclick="initiateCookieSync()">Initiate Cookie Sync</button>
+        <button onclick="checkCookies()">Check Cookies</button>
+        <button onclick="clearLog()">Clear Log</button>
 
-  <script>
-    function fireTestEvent() {
-      if (typeof fbq === "function") {
-        fbq('track', 'Purchase', { value: 199, currency: 'INR' });
-        console.log(" Meta Purchase Event Fired");
-      } else {
-        console.log(" fbq not available");
-      }
+        <div class="cookie-display" id="cookieDisplay">
+            Current Cookies: <span id="cookieInfo">Click "Check Cookies" to view</span>
+        </div>
 
-      console.log(" Analytics.js event should also fire now");
-    }
-  </script>
+        <div class="log-container">
+            <h3>Activity Log:</h3>
+            <div id="logOutput"></div>
+        </div>
 
+        <!-- Hidden iframes for cookie sync -->
+        <div class="iframe-container">
+            <iframe id="dcFrame" style="display:none;"></iframe>
+            <iframe id="fbFrame" style="display:none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        let logCount = 0;
+
+        function log(message, type = 'info') {
+            logCount++;
+            const logOutput = document.getElementById('logOutput');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logOutput.appendChild(entry);
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('logOutput').innerHTML = '';
+            logCount = 0;
+            log('Log cleared', 'info');
+        }
+
+        function generateUserId() {
+            return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        }
+
+        function initiateCookieSync() {
+            const dcNid = document.getElementById('dcNid').value.trim();
+            const metaPixelId = document.getElementById('metaPixelId').value.trim();
+
+            if (!dcNid) {
+                alert('Please enter your DoubleClick NID');
+                log('❌ DoubleClick NID is required', 'info');
+                return;
+            }
+
+            if (!metaPixelId) {
+                alert('Please enter your Meta Pixel ID');
+                log('❌ Meta Pixel ID is required', 'info');
+                return;
+            }
+
+            log('🚀 Initiating cookie sync process...', 'info');
+            log(`Using DoubleClick NID: ${dcNid}`, 'success');
+            log(`Using Meta Pixel ID: ${metaPixelId}`, 'success');
+            
+            const userId = generateUserId();
+            log(`Generated User ID: ${userId}`, 'success');
+
+            // Step 1: DoubleClick Cookie Sync
+            // This will create an IDE (ID Exchange) cookie
+            const dcSyncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${dcNid}&google_cm&gdpr=0&gdpr_consent=&google_sc=${userId}`;
+            
+            log('📡 Calling DoubleClick pixel for IDE creation...', 'info');
+            log(`URL: ${dcSyncUrl}`, 'info');
+            
+            const dcFrame = document.getElementById('dcFrame');
+            dcFrame.src = dcSyncUrl;
+            
+            dcFrame.onload = function() {
+                log('✅ DoubleClick pixel loaded - IDE cookie should be set', 'success');
+                log('💡 Check Network tab for 302 redirect from doubleclick.net', 'info');
+                log('💡 Look for "ide" parameter in the redirect URL', 'info');
+                
+                // Step 2: Meta/Facebook Cookie Sync
+                setTimeout(() => {
+                    syncWithMeta(userId, metaPixelId);
+                }, 1000);
+            };
+
+            dcFrame.onerror = function() {
+                log('⚠️ Error loading DoubleClick pixel (expected due to CORS)', 'info');
+                // Continue with Meta sync anyway
+                setTimeout(() => {
+                    syncWithMeta(userId, metaPixelId);
+                }, 1000);
+            };
+        }
+
+        function syncWithMeta(userId, metaPixelId) {
+            log('📡 Syncing with Meta/Facebook...', 'info');
+            
+            // Meta pixel with custom event
+            const metaSyncUrl = `https://www.facebook.com/tr?id=${metaPixelId}&ev=CookieSync&cd[external_id]=${userId}&noscript=1`;
+            
+            log(`Meta URL: ${metaSyncUrl}`, 'info');
+            
+            const fbFrame = document.getElementById('fbFrame');
+            fbFrame.src = metaSyncUrl;
+            
+            fbFrame.onload = function() {
+                log('✅ Meta pixel loaded successfully', 'success');
+                log('🎉 Cookie sync process completed!', 'success');
+                log('', 'info');
+                log('🔍 To verify in Network tab:', 'info');
+                log('1. Find the request to cm.g.doubleclick.net/pixel', 'info');
+                log('2. Check Status Code: should be 302 (redirect)', 'info');
+                log('3. Check Response Headers → Location header', 'info');
+                log('4. Look for "ide=" parameter in the Location URL', 'info');
+                log('5. Find the request to facebook.com/tr', 'info');
+                log('6. Click "Check Cookies" to see stored cookies', 'info');
+            };
+
+            fbFrame.onerror = function() {
+                log('⚠️ Error loading Meta pixel (expected due to CORS)', 'info');
+                log('✅ Cookie sync requests sent - check Network tab', 'success');
+            };
+        }
+
+        function checkCookies() {
+            const cookies = document.cookie;
+            const cookieInfo = document.getElementById('cookieInfo');
+            
+            if (cookies) {
+                cookieInfo.textContent = cookies;
+                log('📋 Current cookies displayed above', 'success');
+                
+                // Check for specific cookies
+                if (cookies.includes('IDE') || cookies.includes('ide')) {
+                    log('✅ Found IDE cookie from DoubleClick!', 'success');
+                } else {
+                    log('ℹ️ IDE cookie not visible (may be httpOnly or third-party)', 'info');
+                }
+            } else {
+                cookieInfo.textContent = 'No cookies available (or all are httpOnly/secure)';
+                log('ℹ️ No accessible cookies found', 'info');
+                log('💡 Third-party cookies may be blocked by browser settings', 'info');
+            }
+        }
+
+        // Initial log
+        log('Cookie Sync Demo loaded. Click "Initiate Cookie Sync" to begin.', 'success');
+        log('⚠️ Note: Third-party cookies may be blocked by your browser', 'info');
+    </script>
 </body>
 </html>
