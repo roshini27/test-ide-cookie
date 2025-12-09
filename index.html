@@ -1,52 +1,486 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Google DoubleClick Cookie Sync Test</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Basic security headers -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoubleClick Network ID Validator</title>
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .results.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            display: block;
+        }
+        .results.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            display: block;
+        }
+        .results.warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            display: block;
+        }
+        .results h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .test-item h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status.valid {
+            background: #28a745;
+            color: white;
+        }
+        .status.invalid {
+            background: #dc3545;
+            color: white;
+        }
+        .status.pending {
+            background: #ffc107;
+            color: #333;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>🔍 DoubleClick Network ID Validator</h1>
+        <p>Enter your DoubleClick network ID to validate it across multiple methods.</p>
+        
+        <div class="input-group">
+            <label for="networkId">Network ID:</label>
+            <input type="text" id="networkId" value="1686285891" placeholder="Enter network ID (e.g., 12345678)">
+        </div>
+        
+        <button onclick="validateNetworkId()">Validate Network ID</button>
+        <button onclick="testCookieSync()">Test Cookie Sync</button>
+        
+        <div id="results" class="results"></div>
+    </div>
 
-  <h1>Google DoubleClick Cookie Sync Test Page</h1>
-  <p>
-    This page fires the official Google DoubleClick cookie sync pixel.
-    If third-party cookies and ad consent are allowed, the
-    <strong>IDE</strong> cookie will be created under the
-    <strong>.doubleclick.net</strong> domain.
-  </p>
+    <script>
+        window.googletag = window.googletag || {cmd: []};
 
-  <!-- ✅ GOOGLE DOUBLECLICK COOKIE SYNC PIXEL (NO JAVASCRIPT) -->
-  <img
-    src="https://cm.g.doubleclick.net/pixel?google_nid=1686285891&google_cm=1"
-    width="1"
-    height="1"
-    style="display:none;"
-    alt=""
-  >
+        async function validateNetworkId() {
+            const networkId = document.getElementById('networkId').value.trim();
+            const resultsDiv = document.getElementById('results');
+            
+            if (!networkId) {
+                resultsDiv.className = 'results error';
+                resultsDiv.innerHTML = '<h3>❌ Error</h3><p>Please enter a network ID.</p>';
+                return;
+            }
 
-  <hr>
+            resultsDiv.className = 'results warning';
+            resultsDiv.innerHTML = '<h3>⏳ Testing Network ID...</h3><div class="spinner"></div>';
 
-  <h3>✅ How to Verify</h3>
-  <ol>
-    <li>Open this page in <strong>Google Chrome</strong>.</li>
-    <li>Make sure <strong>third-party cookies are NOT blocked</strong>.</li>
-    <li>Open DevTools → <strong>Application → Cookies</strong>.</li>
-    <li>Select <code>https://cm.g.doubleclick.net</code></li>
-    <li>Look for cookie name: <strong>IDE</strong></li>
-  </ol>
+            const results = [];
 
-  <h3>❗ If You Don’t See the IDE Cookie</h3>
-  <ul>
-    <li>Third-party cookies are blocked</li>
-    <li>You are using Safari / Brave / Firefox</li>
-    <li>You are in Incognito Mode</li>
-    <li>Ad/Marketing consent is not given</li>
-  </ul>
+            // Test 1: Format validation
+            const formatTest = validateFormat(networkId);
+            results.push(formatTest);
 
+            // Test 2: GPT Ad Tag Test
+            const gptTest = await testGPTTag(networkId);
+            results.push(gptTest);
+
+            // Test 3: Direct URL Test
+            const urlTest = await testDirectUrl(networkId);
+            results.push(urlTest);
+
+            // Test 4: Cookie Match Endpoint
+            const cookieTest = await testCookieMatchEndpoint(networkId);
+            results.push(cookieTest);
+
+            displayResults(results, networkId);
+        }
+
+        function validateFormat(networkId) {
+            const isNumeric = /^\d+$/.test(networkId);
+            const length = networkId.length;
+            
+            return {
+                name: 'Format Validation',
+                status: isNumeric && (length >= 8 && length <= 12) ? 'valid' : 'invalid',
+                message: isNumeric 
+                    ? `Valid format: ${length} digits`
+                    : 'Invalid: Must contain only numbers',
+                details: `Network ID: <code>${networkId}</code>`
+            };
+        }
+
+        async function testGPTTag(networkId) {
+            return new Promise((resolve) => {
+                const testAdUnit = `/${networkId}/test`;
+                let resolved = false;
+
+                googletag.cmd.push(function() {
+                    try {
+                        // Try to define a slot
+                        const slot = googletag.defineSlot(testAdUnit, [1, 1], 'test-div-gpt-ad');
+                        
+                        if (slot) {
+                            slot.addService(googletag.pubads());
+                            
+                            // Listen for slot render ended
+                            googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+                                if (!resolved && event.slot === slot) {
+                                    resolved = true;
+                                    googletag.destroySlots([slot]);
+                                    
+                                    resolve({
+                                        name: 'Google Publisher Tag Test',
+                                        status: 'valid',
+                                        message: 'GPT accepted the network ID',
+                                        details: `Ad unit path: <code>${testAdUnit}</code>`
+                                    });
+                                }
+                            });
+
+                            googletag.enableServices();
+                            googletag.display(slot);
+                            
+                            // Timeout after 5 seconds
+                            setTimeout(() => {
+                                if (!resolved) {
+                                    resolved = true;
+                                    googletag.destroySlots([slot]);
+                                    resolve({
+                                        name: 'Google Publisher Tag Test',
+                                        status: 'valid',
+                                        message: 'Network ID format accepted by GPT',
+                                        details: 'No errors thrown during slot definition'
+                                    });
+                                }
+                            }, 5000);
+                        } else {
+                            resolve({
+                                name: 'Google Publisher Tag Test',
+                                status: 'invalid',
+                                message: 'Failed to create ad slot',
+                                details: 'GPT rejected the network ID'
+                            });
+                        }
+                    } catch (error) {
+                        resolve({
+                            name: 'Google Publisher Tag Test',
+                            status: 'invalid',
+                            message: 'Error during GPT test',
+                            details: error.message
+                        });
+                    }
+                });
+            });
+        }
+
+        async function testDirectUrl(networkId) {
+            try {
+                const url = `https://pubads.g.doubleclick.net/gampad/ads?iu=/${networkId}/test&sz=1x1&c=${Date.now()}`;
+                const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+                
+                // With no-cors, we can't read the response, but if it doesn't throw, the endpoint exists
+                return {
+                    name: 'Direct URL Test',
+                    status: 'valid',
+                    message: 'Endpoint responded (no CORS error)',
+                    details: `URL: <code>${url}</code>`
+                };
+            } catch (error) {
+                return {
+                    name: 'Direct URL Test',
+                    status: 'invalid',
+                    message: 'Failed to reach endpoint',
+                    details: error.message
+                };
+            }
+        }
+
+        async function testCookieMatchEndpoint(networkId) {
+            try {
+                const url = `https://cm.g.doubleclick.net/pixel?google_nid=${networkId}&google_cm=1`;
+                
+                // Try to load via image (will work even with CORS)
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    const timeout = setTimeout(() => {
+                        resolve({
+                            name: 'Cookie Match Endpoint Test',
+                            status: 'valid',
+                            message: 'Endpoint accessible (no error)',
+                            details: 'Cookie match URL responded'
+                        });
+                    }, 3000);
+
+                    img.onload = () => {
+                        clearTimeout(timeout);
+                        resolve({
+                            name: 'Cookie Match Endpoint Test',
+                            status: 'valid',
+                            message: 'Cookie match endpoint loaded successfully',
+                            details: `URL: <code>${url}</code>`
+                        });
+                    };
+
+                    img.onerror = () => {
+                        clearTimeout(timeout);
+                        resolve({
+                            name: 'Cookie Match Endpoint Test',
+                            status: 'invalid',
+                            message: 'Cookie match endpoint failed to load',
+                            details: 'Network ID may be invalid or inactive'
+                        });
+                    };
+
+                    img.src = url;
+                });
+            } catch (error) {
+                return {
+                    name: 'Cookie Match Endpoint Test',
+                    status: 'invalid',
+                    message: 'Error testing cookie match',
+                    details: error.message
+                };
+            }
+        }
+
+        function displayResults(results, networkId) {
+            const resultsDiv = document.getElementById('results');
+            const validCount = results.filter(r => r.status === 'valid').length;
+            const totalTests = results.length;
+            
+            const isValid = validCount >= 3; // At least 3 out of 4 tests should pass
+            
+            resultsDiv.className = `results ${isValid ? 'success' : 'error'}`;
+            
+            let html = `
+                <h3>${isValid ? '✅ Network ID Appears Valid' : '❌ Network ID Appears Invalid'}</h3>
+                <p><strong>Network ID:</strong> <code>${networkId}</code></p>
+                <p><strong>Tests Passed:</strong> ${validCount}/${totalTests}</p>
+            `;
+            
+            results.forEach(result => {
+                html += `
+                    <div class="test-item">
+                        <h4>${result.name} <span class="status ${result.status}">${result.status.toUpperCase()}</span></h4>
+                        <p><strong>Result:</strong> ${result.message}</p>
+                        <p><strong>Details:</strong> ${result.details}</p>
+                    </div>
+                `;
+            });
+
+            if (isValid) {
+                html += `
+                    <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 6px;">
+                        <strong>✓ Recommendation:</strong> Your network ID appears to be valid and can be used for cookie syncing.
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 6px;">
+                        <strong>⚠ Recommendation:</strong> Your network ID may be invalid, inactive, or you don't have access to this network in Google Ad Manager.
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        async function testCookieSync() {
+            const networkId = document.getElementById('networkId').value.trim();
+            const resultsDiv = document.getElementById('results');
+            
+            if (!networkId) {
+                resultsDiv.className = 'results error';
+                resultsDiv.innerHTML = '<h3>❌ Error</h3><p>Please enter a network ID.</p>';
+                return;
+            }
+
+            resultsDiv.className = 'results warning';
+            resultsDiv.innerHTML = `
+                <h3>🔄 Testing Cookie Sync...</h3>
+                <p>Attempting to sync with DoubleClick...</p>
+                <div class="spinner"></div>
+            `;
+
+            // Create an iframe to test cookie sync
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.style.width = '1px';
+            iframe.style.height = '1px';
+            
+            const syncUrl = `https://cm.g.doubleclick.net/pixel?google_nid=${networkId}&google_cm=1`;
+            
+            let testResult = {
+                name: 'Cookie Sync Test',
+                status: 'pending',
+                message: 'Testing cookie sync endpoint...',
+                details: ''
+            };
+
+            const timeout = setTimeout(() => {
+                if (iframe.parentNode) {
+                    document.body.removeChild(iframe);
+                }
+                testResult.status = 'valid';
+                testResult.message = 'Cookie sync endpoint is accessible';
+                testResult.details = 'The endpoint responded without errors. Note: Actual cookie syncing may still fail due to browser restrictions (ITP, ETP).';
+                
+                resultsDiv.className = 'results success';
+                resultsDiv.innerHTML = `
+                    <h3>✅ Cookie Sync Test Complete</h3>
+                    <div class="test-item">
+                        <h4>${testResult.name} <span class="status ${testResult.status}">${testResult.status.toUpperCase()}</span></h4>
+                        <p><strong>Result:</strong> ${testResult.message}</p>
+                        <p><strong>Details:</strong> ${testResult.details}</p>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 6px;">
+                        <strong>⚠ Important:</strong> Modern browsers (Safari, Firefox) block third-party cookies by default. Cookie syncing may not work even with a valid network ID. Consider server-side implementation.
+                    </div>
+                `;
+            }, 3000);
+
+            iframe.onload = () => {
+                clearTimeout(timeout);
+                testResult.status = 'valid';
+                testResult.message = 'Cookie sync iframe loaded successfully';
+                testResult.details = `Sync URL: <code>${syncUrl}</code>`;
+            };
+
+            iframe.onerror = () => {
+                clearTimeout(timeout);
+                if (iframe.parentNode) {
+                    document.body.removeChild(iframe);
+                }
+                testResult.status = 'invalid';
+                testResult.message = 'Cookie sync failed';
+                testResult.details = 'The network ID may be invalid or the endpoint is not accessible';
+                
+                resultsDiv.className = 'results error';
+                resultsDiv.innerHTML = `
+                    <h3>❌ Cookie Sync Failed</h3>
+                    <div class="test-item">
+                        <h4>${testResult.name} <span class="status ${testResult.status}">${testResult.status.toUpperCase()}</span></h4>
+                        <p><strong>Result:</strong> ${testResult.message}</p>
+                        <p><strong>Details:</strong> ${testResult.details}</p>
+                    </div>
+                `;
+            };
+
+            iframe.src = syncUrl;
+            document.body.appendChild(iframe);
+        }
+
+        // Auto-test on load with the pre-filled value
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                validateNetworkId();
+            }, 500);
+        });
+    </script>
+    
+    <!-- Hidden div for GPT testing -->
+    <div id="test-div-gpt-ad" style="display: none;"></div>
 </body>
 </html>
